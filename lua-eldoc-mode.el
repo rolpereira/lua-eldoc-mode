@@ -128,13 +128,14 @@
      ("io.tmpfile" . "io.tmpfile ()")
      ("io.type" . "io.type (obj)")
      ("io.write" . "io.write (...)")
-     ("file:close" . "file:close ()")
-     ("file:flush" . "file:flush ()")
-     ("file:lines" . "file:lines ()")
-     ("file:read" . "file:read (...)")
-     ("file:seek" . "file:seek ([whence] [, offset])")
-     ("file:setvbuf" . "file:setvbuf (mode [, size])")
-     ("file:write" . "file:write (...)")
+     ;; These ones can't be parsed because "file" could be anything
+     ;; ("file:close" . "file:close ()")
+     ;; ("file:flush" . "file:flush ()")
+     ;; ("file:lines" . "file:lines ()")
+     ;; ("file:read" . "file:read (...)")
+     ;; ("file:seek" . "file:seek ([whence] [, offset])")
+     ;; ("file:setvbuf" . "file:setvbuf (mode [, size])")
+     ;; ("file:write" . "file:write (...)")
      ("os.clock" . "os.clock ()")
      ("os.date" . "os.date ([format [, time]])")
      ("os.difftime" . "os.difftime (t2, t1)")
@@ -181,7 +182,7 @@
   ;; word. This makes `thing-at-point' return "string.format"
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "w")
-    
+    (backward-word)
     (let* ((function-name (lua-eldoc-mode-thing-at-point-no-properties 'symbol)))
       (cdr (assoc function-name lua-eldoc-mode-standard-functions)))))
 

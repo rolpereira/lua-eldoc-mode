@@ -1,0 +1,74 @@
+;;; lua-eldoc-mode-test.el --- ert tests for lua-eldoc-mode-test  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2014  Rolando Pereira
+
+;; Author: Rolando Pereira <finalyugi@sapo.pt>
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Some unit code tests for lua-eldoc-mode-test
+
+;;; Code:
+
+(require 'ert)
+(require 'lua-eldoc-mode)
+
+(ert-deftest help-after-call ()
+  (with-temp-buffer
+    (insert "string.format")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.format (formatstring, ...)"))))
+
+(ert-deftest help-after-call-with-whitespace ()
+  (with-temp-buffer
+    (insert "string.format ")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.format (formatstring, ...)"))))
+
+(ert-deftest help-after-call-with-parenthesis ()
+  (with-temp-buffer
+    (insert "string.format(")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.format (formatstring, ...)"))))
+
+(ert-deftest help-after-call-with-parenthesis-and-whitespace ()
+  (with-temp-buffer
+    (insert "string.format( ")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.format (formatstring, ...)")))
+  (with-temp-buffer
+    (insert "string.format (")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.format (formatstring, ...)"))))
+
+(ert-deftest help-after-every-call ()
+  (mapc (lambda (function)
+          (with-temp-buffer
+            (insert function)
+            (should-not (null (lua-eldoc-mode-help-at-point)))))
+    (mapcar #'car lua-eldoc-mode-standard-functions)))
+
+(ert-deftest help-after-file-call ()
+  (with-temp-buffer
+    (insert "file:close")
+    (should (null (lua-eldoc-mode-help-at-point))))
+  (with-temp-buffer
+    (insert "foo:close")
+    (should (null (lua-eldoc-mode-help-at-point)))))
+
+
+(provide 'lua-eldoc-mode-test)
+;;; lua-eldoc-mode-test.el ends here
