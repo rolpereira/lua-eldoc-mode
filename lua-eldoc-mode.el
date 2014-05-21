@@ -182,9 +182,10 @@
   ;; word. This makes `thing-at-point' return "string.format"
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "w")
-    (backward-word)
-    (let* ((function-name (lua-eldoc-mode-thing-at-point-no-properties 'symbol)))
-      (cdr (assoc function-name lua-eldoc-mode-standard-functions)))))
+    (save-excursion
+      (backward-word)
+      (let* ((function-name (lua-eldoc-mode-thing-at-point-no-properties 'symbol)))
+        (cdr (assoc function-name lua-eldoc-mode-standard-functions))))))
 
 
 ;;;###autoload

@@ -69,6 +69,12 @@
     (insert "foo:close")
     (should (null (lua-eldoc-mode-help-at-point)))))
 
+(ert-deftest point-shouldnt-move-after-help ()
+  (with-temp-buffer
+    (insert "string.len")
+    (let ((old-point (point)))
+      (lua-eldoc-mode-help-at-point)
+      (should (eq old-point (point))))))
 
 (provide 'lua-eldoc-mode-test)
 ;;; lua-eldoc-mode-test.el ends here
