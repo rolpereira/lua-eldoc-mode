@@ -76,5 +76,13 @@
       (lua-eldoc-mode-help-at-point)
       (should (eq old-point (point))))))
 
+(ert-deftest help-in-string-methods ()
+  (with-temp-buffer
+    (insert "local foo = 'test'\nfoo:len()")
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "[string]:len ()"))))
+
+
+
 (provide 'lua-eldoc-mode-test)
 ;;; lua-eldoc-mode-test.el ends here

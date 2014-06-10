@@ -84,6 +84,23 @@
      ("string.reverse" . "string.reverse (s)")
      ("string.sub" . "string.sub (s, i [, j])")
      ("string.upper" . "string.upper (s)")
+
+     ;; The "string" functions used as a method
+     ("byte" . "[string]:byte ([, i [, j]])")
+     ;;("char" . "[string]:char (...)")                      ; Can this be used as methods?
+     ;;("dump" . "[string]:dump (function)")                 ; Can this be used as methods?
+     ("find" . "[string]:find (pattern [, init [, plain]])")
+     ;;("format" . "[string]:format (formatstring, ...)")    ; Can this be used as methods?
+     ("gmatch" . "[string]:gmatch (pattern)")
+     ("gsub" . "[string]:gsub (pattern, repl [, n])")
+     ("len" . "[string]:len ()")
+     ("lower" . "[string]:lower ()")
+     ("match" . "[string]:match (pattern [, init])")
+     ("rep" . "[string]:rep (n)")
+     ("reverse" . "[string]:reverse ()")
+     ("sub" . "[string]:sub (i [, j])")
+     ("upper" . "[string]:upper ()")
+
      ("table.concat" . "table.concat (table [, sep [, i [, j]]])")
      ("table.insert" . "table.insert (table, [pos,] value)")
      ("table.maxn" . "table.maxn (table)")
@@ -182,10 +199,15 @@
   ;; word. This makes `thing-at-point' return "string.format"
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "w")
+    (modify-syntax-entry ?: "w")
     (save-excursion
       (backward-word)
       (let* ((function-name (lua-eldoc-mode-thing-at-point-no-properties 'symbol)))
-        (cdr (assoc function-name lua-eldoc-mode-standard-functions))))))
+        ;; If `function-name' contains the ":" character then instead
+        ;; of searching for e.g. "string.len", try to find only "len"
+        (if (s-contains? ":" function-name)
+          (cdr (assoc (-last-item (s-split ":" function-name)) lua-eldoc-mode-standard-functions))
+          (cdr (assoc function-name lua-eldoc-mode-standard-functions)))))))
 
 
 ;;;###autoload
