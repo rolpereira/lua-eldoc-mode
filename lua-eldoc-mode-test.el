@@ -80,6 +80,17 @@
   (with-temp-buffer
     (insert "local foo = 'test'\nfoo:len()")
     (should (string= (lua-eldoc-mode-help-at-point)
+              "[string]:len ()")))
+  ;; Test with something similar to
+  ;;
+  ;;     foo:len()
+  ;;        :len()
+  ;;
+  ;; Even though this code is non-sensical, I just want to test if
+  ;; lua-eldoc-mode works with a line that contains only a method.  
+  (with-temp-buffer
+    (insert "local foo = 'test'\nfoo:len()\n:len()")
+    (should (string= (lua-eldoc-mode-help-at-point)
               "[string]:len ()"))))
 
 
