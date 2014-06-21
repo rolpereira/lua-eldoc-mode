@@ -33,6 +33,10 @@
 
 ;;; Code:
 
+(require 's)
+(require 'dash)
+(require 'auto-complete)
+
 (defvar lua-eldoc-mode-standard-functions
   '(
      ("assert" . "assert (v [, message])")
