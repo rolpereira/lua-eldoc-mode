@@ -93,6 +93,18 @@
     (should (string= (lua-eldoc-mode-help-at-point)
               "[string]:len ()"))))
 
+(ert-deftest help-in-first-line-before-lua-code ()
+  (with-temp-buffer
+    (insert "\nstring.len")
+    ;; `point' is currently in front of "len", eldoc should work as
+    ;; normal
+    (should (string= (lua-eldoc-mode-help-at-point)
+              "string.len (s)"))
+    (goto-char (point-min))
+    ;; Don't throw an error when the first line of the buffer is empty
+    ;; and `point' is in that line.
+    (should (null (lua-eldoc-mode-help-at-point)))))
+
 
 
 (provide 'lua-eldoc-mode-test)

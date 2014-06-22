@@ -207,11 +207,15 @@
     (save-excursion
       (backward-word)
       (let* ((function-name (lua-eldoc-mode-thing-at-point-no-properties 'symbol)))
-        ;; If `function-name' contains the ":" character then instead
-        ;; of searching for e.g. "string.len", try to find only "len"
-        (if (s-contains? ":" function-name)
-          (cdr (assoc (-last-item (s-split ":" function-name)) lua-eldoc-mode-standard-functions))
-          (cdr (assoc function-name lua-eldoc-mode-standard-functions)))))))
+        ;; Special case: When `point' is on the first line of the
+        ;; buffer and that line is empty, `function-name' will be NIL,
+        ;; which causes `s-contains' to error out.
+        (when (not (null function-name))
+          ;; If `function-name' contains the ":" character then instead
+          ;; of searching for e.g. "string.len", try to find only "len"
+          (if (s-contains? ":" function-name)
+            (cdr (assoc (-last-item (s-split ":" function-name)) lua-eldoc-mode-standard-functions))
+            (cdr (assoc function-name lua-eldoc-mode-standard-functions))))))))
 
 
 ;;;###autoload
