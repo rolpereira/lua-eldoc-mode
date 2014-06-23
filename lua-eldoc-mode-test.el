@@ -26,25 +26,25 @@
 (require 'ert)
 (require 'lua-eldoc-mode)
 
-(ert-deftest help-after-call ()
+(ert-deftest lua-eldoc-mode-test-help-after-call ()
   (with-temp-buffer
     (insert "string.format")
     (should (string= (lua-eldoc-mode-help-at-point)
               "string.format (formatstring, ...)"))))
 
-(ert-deftest help-after-call-with-whitespace ()
+(ert-deftest lua-eldoc-mode-test-help-after-call-with-whitespace ()
   (with-temp-buffer
     (insert "string.format ")
     (should (string= (lua-eldoc-mode-help-at-point)
               "string.format (formatstring, ...)"))))
 
-(ert-deftest help-after-call-with-parenthesis ()
+(ert-deftest lua-eldoc-mode-test-help-after-call-with-parenthesis ()
   (with-temp-buffer
     (insert "string.format(")
     (should (string= (lua-eldoc-mode-help-at-point)
               "string.format (formatstring, ...)"))))
 
-(ert-deftest help-after-call-with-parenthesis-and-whitespace ()
+(ert-deftest lua-eldoc-mode-test-help-after-call-with-parenthesis-and-whitespace ()
   (with-temp-buffer
     (insert "string.format( ")
     (should (string= (lua-eldoc-mode-help-at-point)
@@ -54,14 +54,14 @@
     (should (string= (lua-eldoc-mode-help-at-point)
               "string.format (formatstring, ...)"))))
 
-(ert-deftest help-after-every-call ()
+(ert-deftest lua-eldoc-mode-test-help-after-every-call ()
   (mapc (lambda (function)
           (with-temp-buffer
             (insert function)
             (should-not (null (lua-eldoc-mode-help-at-point)))))
     (mapcar #'car lua-eldoc-mode-standard-functions)))
 
-(ert-deftest help-after-file-call ()
+(ert-deftest lua-eldoc-mode-test-help-after-file-call ()
   (with-temp-buffer
     (insert "file:close")
     (should (null (lua-eldoc-mode-help-at-point))))
@@ -69,14 +69,14 @@
     (insert "foo:close")
     (should (null (lua-eldoc-mode-help-at-point)))))
 
-(ert-deftest point-shouldnt-move-after-help ()
+(ert-deftest lua-eldoc-mode-test-point-shouldnt-move-after-help ()
   (with-temp-buffer
     (insert "string.len")
     (let ((old-point (point)))
       (lua-eldoc-mode-help-at-point)
       (should (eq old-point (point))))))
 
-(ert-deftest help-in-string-methods ()
+(ert-deftest lua-eldoc-mode-test-help-in-string-methods ()
   (with-temp-buffer
     (insert "local foo = 'test'\nfoo:len()")
     (should (string= (lua-eldoc-mode-help-at-point)
@@ -93,7 +93,7 @@
     (should (string= (lua-eldoc-mode-help-at-point)
               "[string]:len ()"))))
 
-(ert-deftest help-in-first-line-before-lua-code ()
+(ert-deftest lua-eldoc-mode-test-help-in-first-line-before-lua-code ()
   (with-temp-buffer
     (insert "\nstring.len")
     ;; `point' is currently in front of "len", eldoc should work as
